@@ -1,12 +1,11 @@
 export class Circle {
-  constructor(stageWidth, stageHeight, centerDx, centerDy, radius) {
+  constructor(stageWidth, stageHeight, centerPoint, radius) {
     this.maxRadius = radius;
     this.radius = 1;
     const diameter = this.radius * 2;
-    this.centerDx = centerDx;
-    this.centerDy = centerDy;
-    this.x = stageWidth / 2 + centerDx;
-    this.y = stageHeight / 2 + centerDy;
+    this.centerPoint = centerPoint;
+    this.x = centerPoint.x;
+    this.y = centerPoint.y;
   }
   draw(ctx) {
     this.growUp();
@@ -18,12 +17,17 @@ export class Circle {
     // ctx.stroke();
   }
   resize(stageWidth, stageHeight) {
-    this.x = stageWidth / 2 + this.centerDx;
-    this.y = stageHeight / 2 + this.centerDy;
+    this.centerPoint.resize(stageWidth, stageHeight);
+    this.x = this.centerPoint.x;
+    this.y = this.centerPoint.y;
   }
   growUp() {
     if (this.radius < this.maxRadius) {
       this.radius += this.radius * 0.15;
     }
+  }
+  isGrowingUp() {
+    if (this.radius < this.maxRadius) return true;
+    else return false;
   }
 }

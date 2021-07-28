@@ -1,6 +1,9 @@
 // import { Point } from './point.js';
 // import { Dialog } from './dialog.js';
 import { Circle } from "./circle.js";
+import { Line } from "./line.js";
+import { Point } from "./point.js";
+import { Tree } from "./tree.js";
 class App {
   constructor() {
     this.canvas = document.createElement("canvas");
@@ -19,17 +22,59 @@ class App {
     //     this.items[i] = new Dialog();
     // }
     this.circles = [];
+    this.lines = [];
+    this.trees = [];
+    // this.tree = new Tree(
+    //   new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
+    //   document.body.clientWidth,
+    //   document.body.clientHeight,
+    //   5,
+    //   Math.PI * 0,
+    //   150
+    // );
     this.positions = [
-      { x: 0, y: -86.6 },
-      { x: -100, y: 86.6 },
-      { x: 100, y: 86.6 },
+      new Point(
+        document.body.clientWidth,
+        document.body.clientHeight,
+        0,
+        -86.6
+      ),
+      new Point(
+        document.body.clientWidth,
+        document.body.clientHeight,
+        -100,
+        86.6
+      ),
+      new Point(
+        document.body.clientWidth,
+        document.body.clientHeight,
+        100,
+        86.6
+      ),
     ];
+    for (let i = 0; i < this.total; i++) {
+      this.trees[i] = new Tree(
+        new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
+        document.body.clientWidth,
+        document.body.clientHeight,
+        3,
+        (Math.PI / 1.5) * i,
+        200
+      );
+    }
     for (let i = 0; i < this.total; i++) {
       this.circles[i] = new Circle(
         document.body.clientWidth,
         document.body.clientHeight,
-        this.positions[i].x,
-        this.positions[i].y,
+        this.positions[i],
+        50
+      );
+    }
+    for (let i = 0; i < this.total; i++) {
+      this.lines[i] = new Line(
+        2,
+        this.positions[i],
+        this.positions[i + 1] ? this.positions[i + 1] : this.positions[0],
         50
       );
     }
@@ -61,61 +106,27 @@ class App {
     for (let i = 0; i < this.circles.length; i++) {
       this.circles[i].resize(this.stageWidth, this.stageHeight);
     }
+    for (let i = 0; i < this.lines.length; i++) {
+      this.lines[i].resize(this.stageWidth, this.stageHeight);
+    }
   }
 
   animate() {
     window.requestAnimationFrame(this.animate.bind(this));
 
     this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
-    // this.circle1.draw(this.ctx);
-    // this.circle2.draw(this.ctx);
-    // this.circle3.draw(this.ctx);
-    this.ctx.save();
-    this.ctx.shadowColor = "rgba(0,0,0,0)";
-    this.ctx.lineWidth = 2;
-    this.ctx.beginPath();
-    this.ctx.strokeStyle = "#eb6aff";
-    this.ctx.moveTo(
-      this.stageWidth / 2 + this.positions[0].x,
-      this.stageHeight / 2 + this.positions[0].y
-    );
-    this.ctx.lineTo(
-      this.stageWidth / 2 + this.positions[1].x,
-      this.stageHeight / 2 + this.positions[1].y
-    );
-    this.ctx.lineTo(
-      this.stageWidth / 2 + this.positions[2].x,
-      this.stageHeight / 2 + this.positions[2].y
-    );
-    this.ctx.lineTo(
-      this.stageWidth / 2 + this.positions[0].x,
-      this.stageHeight / 2 + this.positions[0].y
-    );
-    // this.ctx.fill();
-    this.ctx.stroke();
-    this.ctx.closePath();
-    this.ctx.restore();
+    if (!this.circles[0].isGrowingUp()) {
+      for (let i = 0; i < this.lines.length; i++) {
+        // this.lines[i].draw(this.ctx);
+      }
+    }
     for (let i = 0; i < this.circles.length; i++) {
-      this.circles[i].draw(this.ctx);
+      // this.circles[i].draw(this.ctx);
     }
 
-    // if (this.curItem) {
-    //     this.ctx.fillStyle = `#ff4338`;
-    //     this.ctx.strokeStyle = `#ff4338`;
-
-    //     this.ctx.beginPath();
-    //     this.ctx.arc(this.mousePos.x, this.mousePos.y, 8, Math.PI * 0, Math.PI * 2);
-    //     this.ctx.fill();
-
-    //     this.ctx.beginPath();
-    //     this.ctx.arc(this.curItem.centerPos.x, this.curItem.centerPos.y, 8, 0, Math.PI * 2);
-    //     this.ctx.fill();
-
-    //     this.ctx.beginPath();
-    //     this.ctx.moveTo(this.mousePos.x, this.mousePos.y);
-    //     this.ctx.lineTo(this.curItem.centerPos.x, this.curItem.centerPos.y);
-    //     this.ctx.stroke();
-    // }
+    for (let i = 0; i < this.trees.length; i++) {
+      this.trees[i].draw(this.ctx);
+    }
   }
 
   onDown(e) {
