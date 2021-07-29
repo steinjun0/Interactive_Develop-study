@@ -9,83 +9,69 @@ class App {
     this.canvas = document.createElement("canvas");
     document.body.appendChild(this.canvas);
     this.ctx = this.canvas.getContext("2d");
-
+    this.temp = 0;
     this.pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
 
-    // this.mousePos = new Point();
+    this.mousePos = new Point(
+      document.body.clientWidth,
+      document.body.clientHeight,
+      0,
+      0
+    );
+    this.mousePrevPos = null;
+    this.mouseClickPos = new Point(
+      document.body.clientWidth,
+      document.body.clientHeight,
+      0,
+      0
+    );
+    this.isMouseClicked = false;
+    this.ctxOrigin = { x: 0, y: 0 };
     this.curItem = null;
 
     this.items = [];
     this.total = 3;
-
-    // for (let i = 0; i < this.total; i++) {
-    //     this.items[i] = new Dialog();
-    // }
     this.circles = [];
     this.lines = [];
     this.trees = [];
-    // this.tree = new Tree(
-    //   new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
-    //   document.body.clientWidth,
-    //   document.body.clientHeight,
-    //   5,
-    //   Math.PI * 0,
-    //   150
-    // );
-    this.positions = [
-      new Point(
-        document.body.clientWidth,
-        document.body.clientHeight,
-        0,
-        -86.6
-      ),
-      new Point(
-        document.body.clientWidth,
-        document.body.clientHeight,
-        -100,
-        86.6
-      ),
-      new Point(
-        document.body.clientWidth,
-        document.body.clientHeight,
-        100,
-        86.6
-      ),
-    ];
+    this.subTrees = [[]];
+    let j = 0;
     for (let i = 0; i < this.total; i++) {
       this.trees[i] = new Tree(
         new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
         document.body.clientWidth,
         document.body.clientHeight,
         3,
+        25,
         (Math.PI / 1.5) * i,
         200
       );
-    }
-    for (let i = 0; i < this.total; i++) {
-      this.circles[i] = new Circle(
-        document.body.clientWidth,
-        document.body.clientHeight,
-        this.positions[i],
-        50
-      );
-    }
-    for (let i = 0; i < this.total; i++) {
-      this.lines[i] = new Line(
-        2,
-        this.positions[i],
-        this.positions[i + 1] ? this.positions[i + 1] : this.positions[0],
-        50
-      );
+      this.subTrees[i] = [];
+      for (j = 0; j < 3; j++) {
+        this.subTrees[i][j] = new Tree(
+          new Point(
+            document.body.clientWidth,
+            document.body.clientHeight,
+            this.trees[i].childNode[j].x - document.body.clientWidth / 2,
+            this.trees[i].childNode[j].y - document.body.clientHeight / 2
+          ),
+          document.body.clientWidth,
+          document.body.clientHeight,
+          3,
+          12.5,
+          (Math.PI / 1.5) * i,
+          200
+        );
+      }
     }
 
     window.addEventListener("resize", this.resize.bind(this), false);
     this.resize();
     window.requestAnimationFrame(this.animate.bind(this));
 
-    // document.addEventListener('pointerdown', this.onDown.bind(this), false);
-    // document.addEventListener('pointermove', this.onMove.bind(this), false);
-    // document.addEventListener('pointerup', this.onUp.bind(this), false);
+    document.addEventListener("pointerdown", this.onDown.bind(this), false);
+    document.addEventListener("pointermove", this.onMove.bind(this), false);
+    document.addEventListener("pointerup", this.onUp.bind(this), false);
   }
 
   resize() {
@@ -95,67 +81,48 @@ class App {
     this.canvas.width = this.stageWidth * this.pixelRatio;
     this.canvas.height = this.stageHeight * this.pixelRatio;
     this.ctx.scale(this.pixelRatio, this.pixelRatio);
-    // this.circle1.resize(this.stageWidth, this.stageHeight);
-    // this.circle2.resize(this.stageWidth, this.stageHeight);
-    // this.circle3.resize(this.stageWidth, this.stageHeight);
+
     this.ctx.shadowOffsetX = 0;
     this.ctx.shadowOffsetY = 3;
     this.ctx.shadowBlur = 6;
     this.ctx.shadowColor = `rgba(0,0,0,0.5)`;
-
-    for (let i = 0; i < this.circles.length; i++) {
-      this.circles[i].resize(this.stageWidth, this.stageHeight);
-    }
-    for (let i = 0; i < this.lines.length; i++) {
-      this.lines[i].resize(this.stageWidth, this.stageHeight);
-    }
   }
 
   animate() {
     window.requestAnimationFrame(this.animate.bind(this));
-
     this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
-    if (!this.circles[0].isGrowingUp()) {
-      for (let i = 0; i < this.lines.length; i++) {
-        // this.lines[i].draw(this.ctx);
-      }
-    }
-    for (let i = 0; i < this.circles.length; i++) {
-      // this.circles[i].draw(this.ctx);
-    }
 
     for (let i = 0; i < this.trees.length; i++) {
       this.trees[i].draw(this.ctx);
+      for (let j = 0; j < this.subTrees[i].length; j++) {
+        this.subTrees[i][j].draw(this.ctx);
+      }
     }
   }
 
   onDown(e) {
-    // this.mousePos.x = e.clientX;
-    // this.mousePos.y = e.clientY;
-    // for (let i = this.items.length - 1; i >= 0; i--) {
-    //     const item = this.items[i].down(this.mousePos.clone());
-    //     if (item) {
-    //         this.curItem = item;
-    //         const index = this.items.indexOf(item);
-    //         this.items.push(this.items.splice(index, 1)[0]);
-    //         break;
-    //     }
-    // }
+    this.mouseClickPos.setPos(e.clientX, e.clientY);
+    console.log("mouse click!!!", this.mouseClickPos);
+    this.isMouseClicked = true;
   }
 
   onMove(e) {
-    // this.mousePos.x = e.clientX;
-    // this.mousePos.y = e.clientY;
-    // for (let i = 0; i < this.items.length; i++) {
-    //     this.items[i].move(this.mousePos.clone());
-    // }
+    if (this.isMouseClicked === true) {
+      if (this.mousePrevPos === null) {
+        this.mousePrevPos = this.mouseClickPos;
+      }
+      let dx = e.clientX - this.mousePrevPos.x;
+      let dy = e.clientY - this.mousePrevPos.y;
+      this.mousePrevPos.setPos(e.clientX, e.clientY);
+      this.ctxOrigin = { x: this.ctxOrigin.x + dx, y: this.ctxOrigin.y + dy };
+      console.log("mouse move!!", dx, dy);
+      this.ctx.translate(dx, dy);
+    }
   }
 
   onUp(e) {
-    // this.curItem = null;
-    // for (let i = 0; i < this.items.length; i++) {
-    //     this.items[i].up();
-    // }
+    this.isMouseClicked = false;
+    this.mousePrevPos = null;
   }
 }
 
