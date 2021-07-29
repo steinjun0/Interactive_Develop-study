@@ -31,7 +31,7 @@ class App {
     this.curItem = null;
 
     this.items = [];
-    this.numSubTree = 3;
+    this.numSubTree = 0;
     this.circles = [];
     this.lines = [];
     this.trees = [];
@@ -41,20 +41,22 @@ class App {
       document.body.clientWidth,
       document.body.clientHeight,
       new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
-      25
+      100
     );
-    for (let i = 0; i < this.numSubTree; i++) {
+    for (let i = 0; i < 1; i++) {
       this.trees[i] = new Tree(
         new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
         document.body.clientWidth,
         document.body.clientHeight,
-        3,
+        this.numSubTree,
         25,
-        (Math.PI / 1.5) * i,
+        ((2 * Math.PI) / this.numSubTree) * i,
+        Math.PI / 0.5,
         200
       );
       this.subTrees[i] = [];
-      for (j = 0; j < 3; j++) {
+      for (j = 0; j < this.numSubTree; j++) {
+        console.log("this.trees[i].childAngle[j]", this.trees[i].childAngle[j]);
         this.subTrees[i][j] = new Tree(
           new Point(
             document.body.clientWidth,
@@ -66,7 +68,8 @@ class App {
           document.body.clientHeight,
           3,
           12.5,
-          (Math.PI / 1.5) * i,
+          this.trees[i].childAngle[j],
+          Math.PI / 2,
           200
         );
       }
