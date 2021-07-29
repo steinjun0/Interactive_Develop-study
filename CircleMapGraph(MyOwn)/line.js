@@ -33,9 +33,9 @@ export class Line {
   }
   resize(stageWidth, stageHeight) {
     this.startPoint.resize(stageWidth, stageHeight);
+    this.endPoint.resize(stageWidth, stageHeight);
     this.x = this.endPoint.x;
     this.y = this.endPoint.y;
-    this.endPoint.resize(stageWidth, stageHeight);
   }
   isGrowingUp() {
     return this.t < 1;

@@ -9,6 +9,7 @@ class App {
     this.canvas = document.createElement("canvas");
     document.body.appendChild(this.canvas);
     this.ctx = this.canvas.getContext("2d");
+    this.scale = 1;
     this.temp = 0;
     this.pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
 
@@ -78,6 +79,7 @@ class App {
     document.addEventListener("pointerdown", this.onDown.bind(this), false);
     document.addEventListener("pointermove", this.onMove.bind(this), false);
     document.addEventListener("pointerup", this.onUp.bind(this), false);
+    document.addEventListener("wheel", this.onWheel.bind(this), false);
   }
 
   resize() {
@@ -92,11 +94,29 @@ class App {
     this.ctx.shadowOffsetY = 3;
     this.ctx.shadowBlur = 6;
     this.ctx.shadowColor = `rgba(0,0,0,0.5)`;
+
+    this.parentNode.resize(this.stageWidth, this.stageHeight);
+    for (let i = 0; i < this.trees.length; i++) {
+      this.trees[i].resize(this.stageWidth, this.stageHeight);
+      if (!this.trees[i].isLineGrowingUp()) {
+        for (let j = 0; j < this.subTrees[i].length; j++) {
+          this.subTrees[i][j].resize(this.stageWidth, this.stageHeight);
+        }
+      }
+      // for (let j = 0; j < this.subTrees[i].length; j++) {
+      //   this.subTrees[i][j].draw(this.ctx);
+      // }
+    }
   }
 
   animate() {
     window.requestAnimationFrame(this.animate.bind(this));
-    this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
+    this.ctx.clearRect(
+      -this.stageWidth * 20,
+      -this.stageHeight * 20,
+      this.stageWidth * 40,
+      this.stageHeight * 40
+    );
     this.parentNode.draw(this.ctx);
     for (let i = 0; i < this.trees.length; i++) {
       this.trees[i].draw(this.ctx);
@@ -124,9 +144,10 @@ class App {
       }
       let dx = e.clientX - this.mousePrevPos.x;
       let dy = e.clientY - this.mousePrevPos.y;
+      dx /= this.scale;
+      dy /= this.scale;
       this.mousePrevPos.setPos(e.clientX, e.clientY);
       this.ctxOrigin = { x: this.ctxOrigin.x + dx, y: this.ctxOrigin.y + dy };
-      console.log("mouse move!!", dx, dy);
       this.ctx.translate(dx, dy);
     }
   }
@@ -134,6 +155,19 @@ class App {
   onUp(e) {
     this.isMouseClicked = false;
     this.mousePrevPos = null;
+  }
+  onWheel(e) {
+    let scale = 1;
+    if (e.deltaY < 0) {
+      scale = 1.1;
+      this.scale *= 1.1;
+    } else {
+      scale = 0.9;
+      this.scale *= 0.9;
+    }
+    this.ctx.translate(this.stageWidth / 2, this.stageHeight / 2);
+    this.ctx.scale(scale, scale);
+    this.ctx.translate(-this.stageWidth / 2, -this.stageHeight / 2);
   }
 }
 

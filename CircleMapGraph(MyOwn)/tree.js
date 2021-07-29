@@ -63,6 +63,12 @@ export class Tree {
       }
     }
   }
+  resize(stageWidth, stageHeight) {
+    for (let i = 0; i < this.childNode.length; i++) {
+      this.lines[i].resize(stageWidth, stageHeight);
+      this.childNode[i].resize(stageWidth, stageHeight);
+    }
+  }
   getLineTimeFunction(t) {
     let dx = this.endPoint.x - this.startPoint.x;
     let dy = this.endPoint.y - this.startPoint.y;
