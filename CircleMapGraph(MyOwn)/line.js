@@ -14,6 +14,8 @@ export class Line {
     if (this.t < 1) {
       this.t += 0.05;
       [this.x, this.y] = this.getLineTimeFunction(this.t);
+    } else {
+      this.t = 1;
     }
     ctx.moveTo(this.startPoint.x, this.startPoint.y);
     ctx.lineTo(this.x, this.y);
@@ -31,5 +33,8 @@ export class Line {
     this.x = this.endPoint.x;
     this.y = this.endPoint.y;
     this.endPoint.resize(stageWidth, stageHeight);
+  }
+  isGrowingUp() {
+    return this.t < 1;
   }
 }

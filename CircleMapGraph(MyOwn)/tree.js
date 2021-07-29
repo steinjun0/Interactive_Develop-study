@@ -8,13 +8,19 @@ export class Tree {
     stageWidth,
     stageHeight,
     numChild,
+    size,
     rotateAngle,
     radius
   ) {
     this.centerPoint = centerPoint;
     this.numChild = numChild;
     this.rotateAngle = rotateAngle;
-    this.parentNode = new Circle(stageWidth, stageHeight, this.centerPoint, 50);
+    this.parentNode = new Circle(
+      stageWidth,
+      stageHeight,
+      this.centerPoint,
+      size
+    );
     this.lines = [];
     this.childNode = [];
     for (let i = 0; i < numChild; i++) {
@@ -37,7 +43,12 @@ export class Tree {
         childNodeX,
         childNodeY
       );
-      this.childNode[i] = new Circle(stageWidth, stageHeight, tempPosition, 25);
+      this.childNode[i] = new Circle(
+        stageWidth,
+        stageHeight,
+        tempPosition,
+        size / 2
+      );
       this.lines[i] = new Line(2, this.centerPoint, tempPosition);
     }
   }
@@ -45,9 +56,11 @@ export class Tree {
     for (let i = 0; i < this.childNode.length; i++) {
       this.lines[i].draw(ctx);
     }
-    this.parentNode.draw(ctx);
+    // this.parentNode.draw(ctx);
     for (let i = 0; i < this.childNode.length; i++) {
-      this.childNode[i].draw(ctx);
+      if (!this.lines[i].isGrowingUp()) {
+        this.childNode[i].draw(ctx);
+      }
     }
   }
   getLineTimeFunction(t) {
