@@ -8,6 +8,8 @@ export class Line {
     this.t = 0;
   }
   draw(ctx) {
+    ctx.save();
+    ctx.globalCompositeOperation = "destination-over";
     ctx.lineWidth = this.lineWidth;
     ctx.beginPath();
     ctx.strokeStyle = "#eb6aff";
@@ -20,6 +22,7 @@ export class Line {
     ctx.moveTo(this.startPoint.x, this.startPoint.y);
     ctx.lineTo(this.x, this.y);
     ctx.stroke();
+    ctx.restore();
   }
   getLineTimeFunction(t) {
     let dx = this.endPoint.x - this.startPoint.x;

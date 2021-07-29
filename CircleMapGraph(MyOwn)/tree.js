@@ -70,4 +70,13 @@ export class Tree {
     let y = this.startPoint.y + dy * t;
     return [x, y];
   }
+  isGrowingUp() {
+    return (
+      this.childNode[this.childNode.length - 1].isGrowingUp() ||
+      this.lines[this.childNode.length - 1].isGrowingUp()
+    );
+  }
+  isLineGrowingUp() {
+    return this.lines[this.childNode.length - 1].isGrowingUp();
+  }
 }

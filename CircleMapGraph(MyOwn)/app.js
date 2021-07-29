@@ -30,13 +30,19 @@ class App {
     this.curItem = null;
 
     this.items = [];
-    this.total = 3;
+    this.numSubTree = 3;
     this.circles = [];
     this.lines = [];
     this.trees = [];
     this.subTrees = [[]];
     let j = 0;
-    for (let i = 0; i < this.total; i++) {
+    this.parentNode = new Circle(
+      document.body.clientWidth,
+      document.body.clientHeight,
+      new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
+      25
+    );
+    for (let i = 0; i < this.numSubTree; i++) {
       this.trees[i] = new Tree(
         new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
         document.body.clientWidth,
@@ -91,12 +97,17 @@ class App {
   animate() {
     window.requestAnimationFrame(this.animate.bind(this));
     this.ctx.clearRect(0, 0, this.stageWidth, this.stageHeight);
-
+    this.parentNode.draw(this.ctx);
     for (let i = 0; i < this.trees.length; i++) {
       this.trees[i].draw(this.ctx);
-      for (let j = 0; j < this.subTrees[i].length; j++) {
-        this.subTrees[i][j].draw(this.ctx);
+      if (!this.trees[i].isLineGrowingUp()) {
+        for (let j = 0; j < this.subTrees[i].length; j++) {
+          this.subTrees[i][j].draw(this.ctx);
+        }
       }
+      // for (let j = 0; j < this.subTrees[i].length; j++) {
+      //   this.subTrees[i][j].draw(this.ctx);
+      // }
     }
   }
 
