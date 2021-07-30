@@ -1,37 +1,19 @@
-// import { Point } from './point.js';
-// import { Dialog } from './dialog.js';
 import { Circle } from "./circle.js";
-import { Line } from "./line.js";
 import { Point } from "./point.js";
 import { Tree } from "./tree.js";
+import { Mouse } from "./mouse.js";
 class App {
   constructor() {
     this.canvas = document.createElement("canvas");
     document.body.appendChild(this.canvas);
     this.ctx = this.canvas.getContext("2d");
-    this.scale = 1;
     this.temp = 0;
     this.pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
-
-    this.mousePos = new Point(
-      document.body.clientWidth,
-      document.body.clientHeight,
-      0,
-      0
-    );
-    this.mousePrevPos = null;
-    this.mouseClickPos = new Point(
-      document.body.clientWidth,
-      document.body.clientHeight,
-      0,
-      0
-    );
-    this.isMouseClicked = false;
-    this.ctxOrigin = { x: 0, y: 0 };
+    this.mouse = new Mouse();
     this.curItem = null;
 
     this.items = [];
-    this.numSubTree = 0;
+    this.numSubTree = 7;
     this.circles = [];
     this.lines = [];
     this.trees = [];
@@ -56,7 +38,6 @@ class App {
       );
       this.subTrees[i] = [];
       for (j = 0; j < this.numSubTree; j++) {
-        console.log("this.trees[i].childAngle[j]", this.trees[i].childAngle[j]);
         this.subTrees[i][j] = new Tree(
           new Point(
             document.body.clientWidth,
@@ -79,10 +60,31 @@ class App {
     this.resize();
     window.requestAnimationFrame(this.animate.bind(this));
 
-    document.addEventListener("pointerdown", this.onDown.bind(this), false);
-    document.addEventListener("pointermove", this.onMove.bind(this), false);
-    document.addEventListener("pointerup", this.onUp.bind(this), false);
-    document.addEventListener("wheel", this.onWheel.bind(this), false);
+    document.addEventListener(
+      "pointerdown",
+      this.mouse.onDown.bind(this.mouse),
+      false
+    );
+    document.addEventListener(
+      "pointermove",
+      this.mouse.onMove.bind(this.mouse, this.ctx),
+      false
+    );
+    document.addEventListener(
+      "pointerup",
+      this.mouse.onUp.bind(this.mouse, this.ctx),
+      false
+    );
+    document.addEventListener(
+      "wheel",
+      this.mouse.onWheel.bind(
+        this.mouse,
+        this.ctx,
+        this.stageWidth,
+        this.stageHeight
+      ),
+      false
+    );
   }
 
   resize() {
@@ -132,45 +134,6 @@ class App {
       //   this.subTrees[i][j].draw(this.ctx);
       // }
     }
-  }
-
-  onDown(e) {
-    this.mouseClickPos.setPos(e.clientX, e.clientY);
-    console.log("mouse click!!!", this.mouseClickPos);
-    this.isMouseClicked = true;
-  }
-
-  onMove(e) {
-    if (this.isMouseClicked === true) {
-      if (this.mousePrevPos === null) {
-        this.mousePrevPos = this.mouseClickPos;
-      }
-      let dx = e.clientX - this.mousePrevPos.x;
-      let dy = e.clientY - this.mousePrevPos.y;
-      dx /= this.scale;
-      dy /= this.scale;
-      this.mousePrevPos.setPos(e.clientX, e.clientY);
-      this.ctxOrigin = { x: this.ctxOrigin.x + dx, y: this.ctxOrigin.y + dy };
-      this.ctx.translate(dx, dy);
-    }
-  }
-
-  onUp(e) {
-    this.isMouseClicked = false;
-    this.mousePrevPos = null;
-  }
-  onWheel(e) {
-    let scale = 1;
-    if (e.deltaY < 0) {
-      scale = 1.1;
-      this.scale *= 1.1;
-    } else {
-      scale = 0.9;
-      this.scale *= 0.9;
-    }
-    this.ctx.translate(this.stageWidth / 2, this.stageHeight / 2);
-    this.ctx.scale(scale, scale);
-    this.ctx.translate(-this.stageWidth / 2, -this.stageHeight / 2);
   }
 }
 
