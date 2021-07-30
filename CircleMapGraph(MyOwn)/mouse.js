@@ -14,11 +14,11 @@ export class Mouse {
       0,
       0
     );
-    this.scale = 1;
     this.isMouseClicked = false;
     this.ctxOrigin = { x: 0, y: 0 };
   }
   onDown(e) {
+    console.log("123");
     this.mouseClickPos.setPos(e.clientX, e.clientY);
     this.isMouseClicked = true;
   }
@@ -30,8 +30,8 @@ export class Mouse {
       }
       let dx = e.clientX - this.mousePrevPos.x;
       let dy = e.clientY - this.mousePrevPos.y;
-      dx /= this.scale;
-      dy /= this.scale;
+      dx /= ctx.getTransform().a;
+      dy /= ctx.getTransform().a;
       this.mousePrevPos.setPos(e.clientX, e.clientY);
       this.ctxOrigin = { x: this.ctxOrigin.x + dx, y: this.ctxOrigin.y + dy };
       ctx.translate(dx, dy);
@@ -44,15 +44,12 @@ export class Mouse {
   }
   onWheel(ctx, stageWidth, stageHeight, e) {
     let scale = 1;
-    if (e.deltaY < 0) {
-      scale = 1.1;
-      this.scale *= 1.1;
-    } else {
-      scale = 0.9;
-      this.scale *= 0.9;
-    }
     ctx.translate(stageWidth / 2, stageHeight / 2);
-    ctx.scale(scale, scale);
+    if (e.deltaY < 0) {
+      ctx.scale(1.1, 1.1);
+    } else {
+      ctx.scale(0.9, 0.9);
+    }
     ctx.translate(-stageWidth / 2, -stageHeight / 2);
   }
 }

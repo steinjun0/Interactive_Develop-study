@@ -66,6 +66,16 @@ class App {
       false
     );
     document.addEventListener(
+      "pointerdown",
+      this.parentNode.focusUp.bind(
+        this.parentNode,
+        this.ctx,
+        this.stageWidth,
+        this.stageHeight
+      ),
+      false
+    );
+    document.addEventListener(
       "pointermove",
       this.mouse.onMove.bind(this.mouse, this.ctx),
       false
@@ -122,6 +132,7 @@ class App {
       this.stageWidth * 40,
       this.stageHeight * 40
     );
+
     this.parentNode.draw(this.ctx);
     for (let i = 0; i < this.trees.length; i++) {
       this.trees[i].draw(this.ctx);
@@ -134,6 +145,25 @@ class App {
       //   this.subTrees[i][j].draw(this.ctx);
       // }
     }
+    // console.log("e f", this.ctx.getTransform().e, this.ctx.getTransform().f);
+    // console.log("ctx.getTransform()", this.ctx.getTransform());
+    // console.log(
+    //   -this.parentNode.x +
+    //     (this.stageWidth / 2 - this.ctx.getTransform().e) /
+    //       this.ctx.getTransform().d
+    // );
+    this.ctx.fillStyle = "#00ff00";
+    this.ctx.beginPath();
+    this.ctx.arc(
+      (this.stageWidth / 2 - this.ctx.getTransform().e) /
+        this.ctx.getTransform().d,
+      (this.stageHeight / 2 - this.ctx.getTransform().f) /
+        this.ctx.getTransform().d,
+      10,
+      0,
+      2 * Math.PI
+    );
+    this.ctx.fill();
   }
 }
 
