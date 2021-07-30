@@ -41,7 +41,7 @@ export class Tree {
         // console.log("rotateAngle", rotateAngle);
         // console.log("this.childBetweenAngle", this.childBetweenAngle);
       }
-      console.log("this.childAngle[i]", i, this.childAngle[i]);
+      // console.log("this.childAngle[i]", i, this.childAngle[i]);
 
       let tempPosition = new Point(
         stageWidth,
