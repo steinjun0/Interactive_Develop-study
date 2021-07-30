@@ -91,4 +91,14 @@ export class Tree {
   isLineGrowingUp() {
     return this.lines[this.childNode.length - 1].isGrowingUp();
   }
+  checkClick(e, ctx, stageWidth, stageHeight) {
+    console.log("checkClick", e.clientX);
+    for (let i = 0; i < this.childNode.length; i++) {
+      if (!this.lines[i].isGrowingUp()) {
+        if (this.childNode[i].isClicked(e)) {
+          this.childNode[i].focusOn(ctx, stageWidth, stageHeight);
+        }
+      }
+    }
+  }
 }

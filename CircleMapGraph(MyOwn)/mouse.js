@@ -44,12 +44,18 @@ export class Mouse {
   }
   onWheel(ctx, stageWidth, stageHeight, e) {
     let scale = 1;
-    ctx.translate(stageWidth / 2, stageHeight / 2);
+    let transX = (stageWidth / 2 - ctx.getTransform().e) / ctx.getTransform().a;
+    let transY =
+      (stageHeight / 2 - ctx.getTransform().f) / ctx.getTransform().a;
+    ctx.translate(transX, transY);
     if (e.deltaY < 0) {
+      scale = 1.1;
       ctx.scale(1.1, 1.1);
     } else {
+      scale = 0.9;
       ctx.scale(0.9, 0.9);
     }
-    ctx.translate(-stageWidth / 2, -stageHeight / 2);
+    ctx.translate(-transX, -transY);
+    console.log((stageWidth / 2 - ctx.getTransform().e) / ctx.getTransform().a);
   }
 }

@@ -13,6 +13,7 @@ class App {
     this.curItem = null;
 
     this.items = [];
+    this.numParent = 1;
     this.numSubTree = 7;
     this.circles = [];
     this.lines = [];
@@ -25,7 +26,7 @@ class App {
       new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
       100
     );
-    for (let i = 0; i < 1; i++) {
+    for (let i = 0; i < this.numParent; i++) {
       this.trees[i] = new Tree(
         new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
         document.body.clientWidth,
@@ -67,14 +68,25 @@ class App {
     );
     document.addEventListener(
       "pointerdown",
-      this.parentNode.focusUp.bind(
-        this.parentNode,
-        this.ctx,
-        this.stageWidth,
-        this.stageHeight
-      ),
+      this.focusOnNode.bind(this),
       false
     );
+
+    // for (let i = 0; i < this.numParent; i++) {
+    //   for (let j = 0; j < this.numSubTree; j++) {
+    //     document.addEventListener(
+    //       "pointerdown",
+    //       this.subTrees[i][j].checkClick(
+    //         this.subTrees[i][j],
+    //         this.ctx,
+    //         this.stageWidth,
+    //         this.stageHeight
+    //       ),
+    //       false
+    //     );
+    //   }
+    // }
+
     document.addEventListener(
       "pointermove",
       this.mouse.onMove.bind(this.mouse, this.ctx),
@@ -127,10 +139,10 @@ class App {
   animate() {
     window.requestAnimationFrame(this.animate.bind(this));
     this.ctx.clearRect(
-      -this.stageWidth * 20,
-      -this.stageHeight * 20,
-      this.stageWidth * 40,
-      this.stageHeight * 40
+      -this.stageWidth * 2000,
+      -this.stageHeight * 2000,
+      this.stageWidth * 4000,
+      this.stageHeight * 4000
     );
 
     this.parentNode.draw(this.ctx);
@@ -164,6 +176,43 @@ class App {
       2 * Math.PI
     );
     this.ctx.fill();
+  }
+
+  focusOnNode(e) {
+    if (this.parentNode.isClicked(e, this.stageWidth, this.stageHeight)) {
+      this.parentNode.focusOn(this.ctx, this.stageWidth, this.stageHeight);
+    } else {
+      for (let i = 0; i < this.numParent; i++) {
+        if (
+          this.trees[i].checkClick(
+            e,
+            this.ctx,
+            this.stageWidth,
+            this.stageHeight
+          )
+        ) {
+          this.trees[i].focusOn(this.ctx, this.stageWidth, this.stageHeight);
+          break;
+        }
+        for (let j = 0; j < this.numSubTree; j++) {
+          if (
+            this.subTrees[i][j].checkClick(
+              e,
+              this.ctx,
+              this.stageWidth,
+              this.stageHeight
+            )
+          ) {
+            this.subTrees[i][j].focusOn(
+              this.ctx,
+              this.stageWidth,
+              this.stageHeight
+            );
+            break;
+          }
+        }
+      }
+    }
   }
 }
 
