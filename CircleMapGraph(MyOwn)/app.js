@@ -13,14 +13,22 @@ class App {
     this.curItem = null;
 
     this.numParent = 1; // 중앙 노드의 개수(추후 중앙 노드가 여러 개 생길 수 있기 때문에 변수를 미리 생성)
-    this.numSubTree = 7; // 중앙 노드가 가질 subTree의 개수
+    this.numSubTree = 4; // 중앙 노드가 가질 subTree의 개수
     this.mainTrees = []; // 중앙 노드의 tree
     this.mainTreesData = [
       [
-        { size: 10 },
-        { size: 20 },
-        { size: 42 },
-        { size: 12 },
+        {
+          name: "현대제철",
+          money: "6조 7,524억원",
+          size: 10 * Math.log(60.75),
+        },
+        {
+          name: "현대차",
+          money: "47조 2,207억원",
+          size: 10 * Math.log(470.22),
+        },
+        { name: "기아", money: "34조 9,423억원", size: 10 * Math.log(340) },
+        { name: "hmm", money: "16조 738억원", size: 10 * Math.log(160) },
         { size: 27 },
         { size: 8 },
         { size: 10 },
@@ -29,8 +37,19 @@ class App {
     this.subTrees = [[]]; // 중앙 노드가 가질 subTree들
     this.subTreesData = [
       [
-        [{ size: 10 }, { size: 4 }, { size: 9 }],
-        [{ size: 4 }, { size: 15 }, { size: 6 }],
+        [
+          { name: "동국제강", money: "1조 8,896억원", size: 10 },
+          { name: "KG동부제철", money: "1조 6,301억원", size: 10 },
+          { name: "고려제강", money: "5,543억원", size: 5 },
+        ],
+        [],
+        [],
+        [
+          { name: "팬오션", money: "3조 9,825억원", size: 30 },
+          { name: "대우조선해양", money: "3조 3,099억원", size: 30 },
+          { name: "대한해운", money: "9,575억원", size: 10 },
+          { name: "KSS해운", money: "2,690억원", size: 2 },
+        ],
         [{ size: 10 }, { size: 6 }, { size: 10 }],
         [{ size: 3 }, { size: 5 }, { size: 8 }],
         [{ size: 10 }, { size: 17 }, { size: 10 }],
@@ -45,8 +64,10 @@ class App {
     // (Tree는 parent노드가 없고, child nodes와 branch만 가지고 있다)
     this.parentNode = new Circle(
       new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
-      100,
-      "#621bff"
+      10 * Math.log(2950),
+      "#621bff",
+      "포스코",
+      "29조 4,256억원"
     );
 
     for (i = 0; i < this.numParent; i++) {
@@ -73,7 +94,7 @@ class App {
           ),
           document.body.clientWidth,
           document.body.clientHeight,
-          3,
+          this.subTreesData[i][j].length,
           this.subTreesData[i][j],
           this.mainTrees[i].childAngle[j],
           Math.PI / 2,

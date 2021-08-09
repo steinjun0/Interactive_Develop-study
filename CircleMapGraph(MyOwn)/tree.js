@@ -49,8 +49,14 @@ export class Tree {
         childNodeX,
         childNodeY
       );
-      console.log("data[i].size", data[i].size);
-      this.childNode[i] = new Circle(tempPosition, data[i].size, "#ff423b");
+      // console.log("data[i].size", data[i].size);
+      this.childNode[i] = new Circle(
+        tempPosition,
+        data[i].size,
+        "#ff423b",
+        data[i].name,
+        data[i].money
+      );
       this.lines[i] = new Line(2, this.centerPoint, tempPosition);
     }
   }
@@ -88,7 +94,7 @@ export class Tree {
     return this.lines[this.childNode.length - 1].isGrowingUp();
   }
   checkClick(e, ctx, stageWidth, stageHeight) {
-    console.log("checkClick", e.clientX);
+    // console.log("checkClick", e.clientX);
     for (let i = 0; i < this.childNode.length; i++) {
       if (!this.lines[i].isGrowingUp()) {
         if (

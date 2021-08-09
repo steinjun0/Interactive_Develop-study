@@ -1,5 +1,5 @@
 export class Circle {
-  constructor(centerPoint, radius, color) {
+  constructor(centerPoint, radius, color, cmpName = "", marketCap = "") {
     this.maxRadius = radius;
     this.radius = 1;
     this.color = color;
@@ -10,6 +10,8 @@ export class Circle {
     this.scale = 1;
     this.finishScaleUp = false;
     this.finishMoveOn = false;
+    this.cmpName = cmpName;
+    this.marketCap = marketCap;
   }
   draw(ctx) {
     this.growUp();
@@ -18,6 +20,16 @@ export class Circle {
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
     ctx.fill();
+    ctx.save();
+    ctx.fillStyle = "#ffffff";
+    ctx.font = `${this.radius / 4}px Noto Sans KR`;
+    ctx.fillText(this.cmpName, this.x - this.radius / 3, this.y);
+    ctx.fillText(
+      this.marketCap,
+      this.x - this.radius / 3,
+      this.y + this.radius / 4
+    );
+    ctx.restore();
     // ctx.stroke();
   }
   resize(stageWidth, stageHeight) {
@@ -38,15 +50,15 @@ export class Circle {
     function distance(x1, y1, x2, y2) {
       return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
     }
-    console.log(
-      "isClicked",
-      distance(
-        clickX - stageWidth / 2,
-        clickY - stageHeight / 2,
-        this.x,
-        this.y
-      )
-    );
+    // console.log(
+    //   "isClicked",
+    //   distance(
+    //     clickX - stageWidth / 2,
+    //     clickY - stageHeight / 2,
+    //     this.x,
+    //     this.y
+    //   )
+    // );
     // console.log("this.x", this.x);
     // console.log(
     //   "(e.clientX - this.x) * (e.clientX - this.x) + (e.clientY - this.y) * (e.clientY - this.y)",
@@ -61,6 +73,7 @@ export class Circle {
     // );
 
     if (distance(clickX, clickY, this.x, this.y) < this.radius * this.radius) {
+      console.log("isClicked");
       return true;
     } else return false;
   }
