@@ -50,12 +50,7 @@ export class Tree {
         childNodeY
       );
       console.log("data[i].size", data[i].size);
-      this.childNode[i] = new Circle(
-        stageWidth,
-        stageHeight,
-        tempPosition,
-        data[i].size
-      );
+      this.childNode[i] = new Circle(tempPosition, data[i].size, "#ff423b");
       this.lines[i] = new Line(2, this.centerPoint, tempPosition);
     }
   }

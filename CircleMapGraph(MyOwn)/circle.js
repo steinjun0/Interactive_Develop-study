@@ -1,7 +1,8 @@
 export class Circle {
-  constructor(stageWidth, stageHeight, centerPoint, radius) {
+  constructor(centerPoint, radius, color) {
     this.maxRadius = radius;
     this.radius = 1;
+    this.color = color;
     const diameter = this.radius * 2;
     this.centerPoint = centerPoint;
     this.x = centerPoint.x;
@@ -13,7 +14,7 @@ export class Circle {
   draw(ctx) {
     this.growUp();
     // ctx.strokeStyle = "#FBE7C6";
-    ctx.fillStyle = "#ff523b";
+    ctx.fillStyle = this.color;
     ctx.beginPath();
     ctx.arc(this.x, this.y, this.radius, 0, 2 * Math.PI);
     ctx.fill();
@@ -64,7 +65,6 @@ export class Circle {
     } else return false;
   }
   focusOn(ctx, stageWidth, stageHeight) {
-    console.log("focusOn");
     // console.log(stageWidth);
     // console.log(this.radius * 2);
     // console.log(stageWidth < this.radius * 2);
@@ -80,11 +80,11 @@ export class Circle {
     //   ctx.translate(-stageWidth / 2, -stageHeight / 2);
     // }
     function scaleUP(scale, x, y, radius) {
-      scale *= 1.03;
+      scale *= 1.05;
       ctx.translate(x, y);
       ctx.scale(scale, scale);
       ctx.translate(-x, -y);
-      return radius * 2 * ctx.getTransform().a * 2 < stageWidth;
+      return radius * 2 * ctx.getTransform().a * 4 < stageWidth;
     }
     // console.log("stageWidth / 2", stageWidth / 2);
     // console.log("this.x", this.x);
@@ -107,7 +107,6 @@ export class Circle {
         Math.abs(absoluteCenterY - y) > 0.1
       );
     }
-    let finishRecur = true;
     if (this.radius * 2 * ctx.getTransform().a * 2 < stageWidth) {
       this.finishScaleUp = !scaleUP(this.scale, this.x, this.y, this.radius);
     }

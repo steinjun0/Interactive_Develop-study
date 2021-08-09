@@ -44,10 +44,9 @@ class App {
     // 중앙 노드 생성(최초 시작하는 tree이기 때문에, 최고 parent node는 직접 생성해 주어야한다.)
     // (Tree는 parent노드가 없고, child nodes와 branch만 가지고 있다)
     this.parentNode = new Circle(
-      document.body.clientWidth,
-      document.body.clientHeight,
       new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
-      100
+      100,
+      "#621bff"
     );
 
     for (i = 0; i < this.numParent; i++) {
