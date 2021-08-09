@@ -38,17 +38,25 @@ class App {
     this.subTreesData = [
       [
         [
-          { name: "동국제강", money: "1조 8,896억원", size: 10 },
-          { name: "KG동부제철", money: "1조 6,301억원", size: 10 },
-          { name: "고려제강", money: "5,543억원", size: 5 },
+          { name: "동국제강", money: "1조 8,896억원", size: 10 * Math.log(18) },
+          {
+            name: "KG동부제철",
+            money: "1조 6,301억원",
+            size: 10 * Math.log(16),
+          },
+          { name: "고려제강", money: "5,543억원", size: 10 * Math.log(5) },
         ],
         [],
         [],
         [
-          { name: "팬오션", money: "3조 9,825억원", size: 30 },
-          { name: "대우조선해양", money: "3조 3,099억원", size: 30 },
-          { name: "대한해운", money: "9,575억원", size: 10 },
-          { name: "KSS해운", money: "2,690억원", size: 2 },
+          { name: "팬오션", money: "3조 9,825억원", size: 10 * Math.log(39) },
+          {
+            name: "대우조선해양",
+            money: "3조 3,099억원",
+            size: 10 * Math.log(33),
+          },
+          { name: "대한해운", money: "9,575억원", size: 10 * Math.log(10) },
+          { name: "KSS해운", money: "2,690억원", size: 10 * Math.log(2) },
         ],
         [{ size: 10 }, { size: 6 }, { size: 10 }],
         [{ size: 3 }, { size: 5 }, { size: 8 }],

@@ -22,11 +22,11 @@ export class Circle {
     ctx.fill();
     ctx.save();
     ctx.fillStyle = "#ffffff";
-    ctx.font = `${this.radius / 4}px Noto Sans KR`;
-    ctx.fillText(this.cmpName, this.x - this.radius / 3, this.y);
+    ctx.font = `100 ${this.radius / 4}px Noto Sans KR`;
+    ctx.fillText(this.cmpName, this.x - this.radius * 0.9, this.y);
     ctx.fillText(
       this.marketCap,
-      this.x - this.radius / 3,
+      this.x - this.radius * 0.9,
       this.y + this.radius / 4
     );
     ctx.restore();
@@ -97,7 +97,7 @@ export class Circle {
       ctx.translate(x, y);
       ctx.scale(scale, scale);
       ctx.translate(-x, -y);
-      return radius * 2 * ctx.getTransform().a * 4 < stageWidth;
+      return radius * 2 * ctx.getTransform().a * 5 < stageWidth;
     }
     // console.log("stageWidth / 2", stageWidth / 2);
     // console.log("this.x", this.x);
