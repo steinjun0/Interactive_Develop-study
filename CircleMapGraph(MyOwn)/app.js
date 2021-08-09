@@ -21,14 +21,26 @@ class App {
           name: "현대제철",
           money: "6조 7,524억원",
           size: 10 * Math.log(60.75),
+          color: "#ff423b",
         },
         {
           name: "현대차",
           money: "47조 2,207억원",
           size: 10 * Math.log(470.22),
+          color: "#112233",
         },
-        { name: "기아", money: "34조 9,423억원", size: 10 * Math.log(340) },
-        { name: "hmm", money: "16조 738억원", size: 10 * Math.log(160) },
+        {
+          name: "기아",
+          money: "34조 9,423억원",
+          size: 10 * Math.log(340),
+          color: "#112233",
+        },
+        {
+          name: "hmm",
+          money: "16조 738억원",
+          size: 10 * Math.log(160),
+          color: "#42ff3b",
+        },
         { size: 27 },
         { size: 8 },
         { size: 10 },
@@ -93,6 +105,13 @@ class App {
       // subTrees 객체 생성
       this.subTrees[i] = [];
       for (j = 0; j < this.numSubTree; j++) {
+        for (let k = 0; k < this.subTreesData[i][j].length; k++) {
+          this.subTreesData[i][j][k].color = this.mainTreesData[i][j].color;
+          console.log(
+            "this.mainTreesData[i][j].color",
+            this.mainTreesData[i][j]
+          );
+        }
         this.subTrees[i][j] = new Tree(
           new Point(
             document.body.clientWidth,

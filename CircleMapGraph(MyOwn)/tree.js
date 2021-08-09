@@ -53,7 +53,8 @@ export class Tree {
       this.childNode[i] = new Circle(
         tempPosition,
         data[i].size,
-        "#ff423b",
+        // "#ff423b",
+        data[i].color,
         data[i].name,
         data[i].money
       );
