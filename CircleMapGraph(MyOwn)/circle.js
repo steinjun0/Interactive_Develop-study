@@ -33,15 +33,15 @@ export class Circle {
     if (this.radius < this.maxRadius) return true;
     else return false;
   }
-  isClicked(e, stageWidth, stageHeight) {
+  isClicked(clickX, clickY, stageWidth, stageHeight) {
     function distance(x1, y1, x2, y2) {
       return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
     }
     console.log(
       "isClicked",
       distance(
-        e.clientX - stageWidth / 2,
-        e.clientY - stageHeight / 2,
+        clickX - stageWidth / 2,
+        clickY - stageHeight / 2,
         this.x,
         this.y
       )
@@ -59,10 +59,7 @@ export class Circle {
     //     (e.clinetY - this.y) * (e.clinetY - this.y)
     // );
 
-    if (
-      distance(e.clientX, e.clientY, this.x, this.y) <
-      this.radius * this.radius
-    ) {
+    if (distance(clickX, clickY, this.x, this.y) < this.radius * this.radius) {
       return true;
     } else return false;
   }

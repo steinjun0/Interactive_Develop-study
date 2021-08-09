@@ -8,7 +8,7 @@ export class Tree {
     stageWidth,
     stageHeight,
     numChild,
-    size,
+    data,
     rotateAngle,
     maxAngle,
     radius
@@ -18,12 +18,12 @@ export class Tree {
     this.rotateAngle = rotateAngle;
     this.maxAngle = maxAngle;
     this.childBetweenAngle = maxAngle / numChild;
-    this.parentNode = new Circle(
-      stageWidth,
-      stageHeight,
-      this.centerPoint,
-      size
-    );
+    // this.parentNode = new Circle(
+    //   stageWidth,
+    //   stageHeight,
+    //   this.centerPoint,
+    //   size
+    // );
     this.lines = [];
     this.childNode = [];
     this.childAngle = [];
@@ -49,11 +49,12 @@ export class Tree {
         childNodeX,
         childNodeY
       );
+      console.log("data[i].size", data[i].size);
       this.childNode[i] = new Circle(
         stageWidth,
         stageHeight,
         tempPosition,
-        size / 2
+        data[i].size
       );
       this.lines[i] = new Line(2, this.centerPoint, tempPosition);
     }
@@ -95,7 +96,14 @@ export class Tree {
     console.log("checkClick", e.clientX);
     for (let i = 0; i < this.childNode.length; i++) {
       if (!this.lines[i].isGrowingUp()) {
-        if (this.childNode[i].isClicked(e)) {
+        if (
+          this.childNode[i].isClicked(
+            (e.clientX - ctx.getTransform().e) / ctx.getTransform().d,
+            (e.clientY - ctx.getTransform().f) / ctx.getTransform().d,
+            stageWidth,
+            stageHeight
+          )
+        ) {
           this.childNode[i].focusOn(ctx, stageWidth, stageHeight);
         }
       }
