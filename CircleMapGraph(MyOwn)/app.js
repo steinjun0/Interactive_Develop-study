@@ -9,6 +9,7 @@ class App {
     this.ctx = this.canvas.getContext("2d");
     this.temp = 0;
     this.pixelRatio = window.devicePixelRatio > 1 ? 2 : 1;
+    // this.pixelRatio = 2;
     this.mouse = new Mouse();
     this.curItem = null;
 
@@ -176,8 +177,8 @@ class App {
       this.mouse.onWheel.bind(
         this.mouse,
         this.ctx,
-        this.stageWidth,
-        this.stageHeight
+        this.canvas.width,
+        this.canvas.height
       ),
       false
     );
@@ -193,11 +194,15 @@ class App {
     this.stageWidth = document.body.clientWidth;
     this.stageHeight = document.body.clientHeight;
 
+    console.log("this.pixelRatio", this.pixelRatio);
+    console.log("window.devicePixelRatio", window.devicePixelRatio);
+
     // 픽셀 비율에 맞춰서 canvas의 픽셀 개수를 설정
     this.canvas.width = this.stageWidth * this.pixelRatio;
     this.canvas.height = this.stageHeight * this.pixelRatio;
     // 그에 맞춰서 scale up(scale up 해도 화면에 보여지는 픽셀의 수는 같은가? *2 한다고 픽셀 개수가 절반이 되지 않는가?)
     this.ctx.scale(this.pixelRatio, this.pixelRatio);
+    this.mouse.resize(this.pixelRatio);
 
     // canvas context에 그림자 설정
     this.ctx.shadowOffsetX = 0;
@@ -267,45 +272,57 @@ class App {
   }
 
   focusOnNode(e) {
+    let mousePos = { clientX: 0, clientY: 0 };
+    mousePos.clientX = this.pixelRatio * e.clientX;
+    mousePos.clientY = this.pixelRatio * e.clientY;
+    // console.log("e.clientX", e.clientX);
+    // console.log(mousePos);
+    console.log("this.canvas.width", this.canvas.width);
+    console.log("this.stageWidth", this.stageWidth);
+    console.log(this.pixelRatio);
     if (
       this.parentNode.isClicked(
-        (e.clientX - this.ctx.getTransform().e) / this.ctx.getTransform().d,
-        (e.clientY - this.ctx.getTransform().f) / this.ctx.getTransform().d,
-        this.stageWidth,
-        this.stageHeight
+        (mousePos.clientX - this.ctx.getTransform().e) /
+          this.ctx.getTransform().d,
+        (mousePos.clientY - this.ctx.getTransform().f) /
+          this.ctx.getTransform().d
       )
     ) {
-      this.parentNode.focusOn(this.ctx, this.stageWidth, this.stageHeight);
+      this.parentNode.focusOn(
+        this.ctx,
+        this.stageWidth * this.pixelRatio,
+        this.stageHeight * this.pixelRatio
+      );
     } else {
       for (let i = 0; i < this.numParent; i++) {
         if (
           this.mainTrees[i].checkClick(
-            e,
+            mousePos,
             this.ctx,
-            this.stageWidth,
-            this.stageHeight
+            this.canvas.width,
+            this.canvas.height
           )
         ) {
           this.mainTrees[i].focusOn(
             this.ctx,
-            this.stageWidth,
-            this.stageHeight
+            this.canvas.width,
+            this.canvas.height
           );
           break;
         }
         for (let j = 0; j < this.numSubTree; j++) {
           if (
             this.subTrees[i][j].checkClick(
-              e,
+              mousePos,
               this.ctx,
-              this.stageWidth,
-              this.stageHeight
+              this.canvas.width,
+              this.canvas.height
             )
           ) {
             this.subTrees[i][j].focusOn(
               this.ctx,
-              this.stageWidth,
-              this.stageHeight
+              this.canvas.width,
+              this.canvas.height
             );
             break;
           }
