@@ -12,6 +12,7 @@ export class Circle {
     this.finishMoveOn = false;
     this.cmpName = cmpName;
     this.marketCap = marketCap;
+    this.isSubtreeOpened = false;
   }
   draw(ctx) {
     this.growUp();
@@ -50,80 +51,51 @@ export class Circle {
     function distance(x1, y1, x2, y2) {
       return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
     }
-    // console.log(
-    //   "isClicked",
-    //   distance(
-    //     clickX - stageWidth / 2,
-    //     clickY - stageHeight / 2,
-    //     this.x,
-    //     this.y
-    //   )
-    // );
-    // console.log("this.x", this.x);
-    // console.log(
-    //   "(e.clientX - this.x) * (e.clientX - this.x) + (e.clientY - this.y) * (e.clientY - this.y)",
-    //   (e.clientX - this.x) * (e.clientX - this.x) +
-    //     (e.clientY - this.y) * (e.clientY - this.y)
-    // );
-    // console.log(this.radius * this.radius);
-    // console.log(
-    //   "isClicked",
-    //   (e.clinetX - this.x) * (e.clinetX - this.x) +
-    //     (e.clinetY - this.y) * (e.clinetY - this.y)
-    // );
-
     if (distance(clickX, clickY, this.x, this.y) < this.radius * this.radius) {
       console.log("isClicked");
+      this.isSubtreeOpened = !this.isSubtreeOpened;
       return true;
     } else return false;
   }
   focusOn(ctx, stageWidth, stageHeight) {
-    // console.log(stageWidth);
-    // console.log(this.radius * 2);
-    // console.log(stageWidth < this.radius * 2);
-
-    // for (
-    //   let scale = 1;
-    //   this.radius * 2 * ctx.getTransform().a * 2 < stageWidth;
-    //   scale = 1.1
-    // ) {
-    //   console.log(scale);
-    //   ctx.translate(stageWidth / 2, stageHeight / 2);
-    //   ctx.scale(scale, scale);
-    //   ctx.translate(-stageWidth / 2, -stageHeight / 2);
-    // }
     function scaleUP(scale, x, y, radius) {
       scale *= 1.05;
       ctx.translate(x, y);
       ctx.scale(scale, scale);
       ctx.translate(-x, -y);
-      return radius * 2 * ctx.getTransform().a * 5 < stageWidth;
+      return radius * 2 * ctx.getTransform().a * 5 < stageHeight;
     }
-    // console.log("stageWidth / 2", stageWidth / 2);
-    // console.log("this.x", this.x);
 
     let absoluteCenterX =
       (stageWidth / 2 - ctx.getTransform().e) / ctx.getTransform().d;
     let absoluteCenterY =
       (stageHeight / 2 - ctx.getTransform().f) / ctx.getTransform().d;
     // console.log("absoluteCenterX", absoluteCenterX);
-    // console.log("x", this.x);
-    // console.log(
-    //   "Math.abs(absoluteCenterX - x) < 0.1 || Math.abs(absoluteCenterY - y) < 0.1",
-    //   Math.abs(absoluteCenterX - this.x) < 0.1 ||
-    //     Math.abs(absoluteCenterY - this.y) < 0.1
-    // );
+    // console.log("stageWidth / 2", stageWidth / 2);
+    // console.log("ctx.getTransform().e", ctx.getTransform().e);
+    // console.log("ctx.getTransform().d", ctx.getTransform().d);
+
     function moveOn(absoluteCenterX, absoluteCenterY, x, y, ctx) {
+      console.log(
+        "Math.abs(absoluteCenterX - x)",
+        Math.abs(absoluteCenterX - x)
+      );
+      console.log("(absoluteCenterX - x) / 10", (absoluteCenterX - x) / 10);
+      // console.log(
+      //   "Math.abs(absoluteCenterY - y)",
+      //   Math.abs(absoluteCenterY - y)
+      // );
+      // console.log("absoluteCenterX", absoluteCenterX);
+      // console.log("x", x);
       ctx.translate((absoluteCenterX - x) / 10, (absoluteCenterY - y) / 10);
       return (
-        Math.abs(absoluteCenterX - x) > 0.1 ||
-        Math.abs(absoluteCenterY - y) > 0.1
+        Math.abs(absoluteCenterX - x) > 10 || Math.abs(absoluteCenterY - y) > 10
       );
     }
-    if (this.radius * 2 * ctx.getTransform().a * 2 < stageWidth) {
+    if (!this.finishScaleUp) {
       this.finishScaleUp = !scaleUP(this.scale, this.x, this.y, this.radius);
     }
-    if (absoluteCenterX !== this.x || absoluteCenterY !== this.y) {
+    if (!this.finishMoveOn) {
       this.finishMoveOn = !moveOn(
         absoluteCenterX,
         absoluteCenterY,

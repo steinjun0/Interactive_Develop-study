@@ -18,15 +18,10 @@ export class Tree {
     this.rotateAngle = rotateAngle;
     this.maxAngle = maxAngle;
     this.childBetweenAngle = maxAngle / numChild;
-    // this.parentNode = new Circle(
-    //   stageWidth,
-    //   stageHeight,
-    //   this.centerPoint,
-    //   size
-    // );
     this.lines = [];
     this.childNode = [];
     this.childAngle = [];
+    this.subTrees = [];
     for (let i = 0; i < numChild; i++) {
       this.childAngle[i] = this.rotateAngle - this.childBetweenAngle * (i - 1);
       let childNodeX =
@@ -34,30 +29,20 @@ export class Tree {
       let childNodeY =
         this.centerPoint.centerDy + radius * Math.sin(this.childAngle[i]);
 
-      if (rotateAngle === 0) {
-        // console.log("i - numChild / 2", i - numChild / 2);
-        // console.log("this.centerPoint.centerDy", this.centerPoint.centerDy);
-        // console.log("childNodeY", childNodeY);
-        // console.log("rotateAngle", rotateAngle);
-        // console.log("this.childBetweenAngle", this.childBetweenAngle);
-      }
-      // console.log("this.childAngle[i]", i, this.childAngle[i]);
-
       let tempPosition = new Point(
         stageWidth,
         stageHeight,
         childNodeX,
         childNodeY
       );
-      // console.log("data[i].size", data[i].size);
       this.childNode[i] = new Circle(
         tempPosition,
         data[i].size,
         // "#ff423b",
         data[i].color,
         data[i].name,
-        data[i].money
-      );
+        data[i].money,
+       );
       this.lines[i] = new Line(2, this.centerPoint, tempPosition);
     }
   }
@@ -65,7 +50,6 @@ export class Tree {
     for (let i = 0; i < this.childNode.length; i++) {
       this.lines[i].draw(ctx);
     }
-    // this.parentNode.draw(ctx);
     for (let i = 0; i < this.childNode.length; i++) {
       if (!this.lines[i].isGrowingUp()) {
         this.childNode[i].draw(ctx);

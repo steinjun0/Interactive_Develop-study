@@ -81,16 +81,6 @@ class App {
     let j,
       i = 0; // for문에 사용될 변수들
 
-    // 중앙 노드 생성(최초 시작하는 tree이기 때문에, 최고 parent node는 직접 생성해 주어야한다.)
-    // (Tree는 parent노드가 없고, child nodes와 branch만 가지고 있다)
-    this.parentNode = new Circle(
-      new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
-      10 * Math.log(2950),
-      "#621bff",
-      "포스코",
-      "29조 4,256억원"
-    );
-
     for (i = 0; i < this.numParent; i++) {
       // 중앙 노드의 tree 선언(추후 중앙 노드가 여러 개 생길 수 있기 때문에 for문으로 생성)
       this.mainTrees[i] = new Tree(
@@ -103,17 +93,12 @@ class App {
         Math.PI / 0.5,
         200
       );
-      // subTrees 객체 생성
-      this.subTrees[i] = [];
+      // Tree는 subTree멤버를 배열의 형태로 가진다.
       for (j = 0; j < this.numSubTree; j++) {
         for (let k = 0; k < this.subTreesData[i][j].length; k++) {
           this.subTreesData[i][j][k].color = this.mainTreesData[i][j].color;
-          console.log(
-            "this.mainTreesData[i][j].color",
-            this.mainTreesData[i][j]
-          );
         }
-        this.subTrees[i][j] = new Tree(
+        this.mainTrees[i].subTrees[j] = new Tree(
           new Point(
             document.body.clientWidth,
             document.body.clientHeight,
@@ -130,6 +115,17 @@ class App {
         );
       }
     }
+
+    // 중앙 노드 생성(최초 시작하는 tree이기 때문에, 최고 parent node는 직접 생성해 주어야한다.)
+    // (Tree는 parent노드가 없고, child nodes와 branch만 가지고 있다)
+    this.parentNode = new Circle(
+      new Point(document.body.clientWidth, document.body.clientHeight, 0, 0),
+      10 * Math.log(2950),
+      "#621bff",
+      "포스코",
+      "29조 4,256억원",
+      this.mainTrees[i]
+    );
 
     // 화면 사이즈에 반응하도록 listener 설정
     window.addEventListener("resize", this.resize.bind(this), false);
@@ -216,8 +212,11 @@ class App {
     for (let i = 0; i < this.mainTrees.length; i++) {
       this.mainTrees[i].resize(this.stageWidth, this.stageHeight);
       if (!this.mainTrees[i].isLineGrowingUp()) {
-        for (let j = 0; j < this.subTrees[i].length; j++) {
-          this.subTrees[i][j].resize(this.stageWidth, this.stageHeight);
+        for (let j = 0; j < this.mainTrees[i].subTrees.length; j++) {
+          this.mainTrees[i].subTrees[j].resize(
+            this.stageWidth,
+            this.stageHeight
+          );
         }
       }
       // for (let j = 0; j < this.subTrees[i].length; j++) {
@@ -236,39 +235,22 @@ class App {
       this.stageWidth * 4000,
       this.stageHeight * 4000
     );
+    // this.ctx.fill();
 
     // canvas의 모든 객체 draw
     this.parentNode.draw(this.ctx);
     for (let i = 0; i < this.mainTrees.length; i++) {
-      this.mainTrees[i].draw(this.ctx);
+      if (this.parentNode.isSubtreeOpened === true) {
+        this.mainTrees[i].draw(this.ctx);
+      }
       if (!this.mainTrees[i].isLineGrowingUp()) {
-        for (let j = 0; j < this.subTrees[i].length; j++) {
-          this.subTrees[i][j].draw(this.ctx);
+        for (let j = 0; j < this.mainTrees[i].subTrees.length; j++) {
+          if (this.mainTrees[i].childNode[j].isSubtreeOpened === true) {
+            this.mainTrees[i].subTrees[j].draw(this.ctx);
+          }
         }
       }
-      // for (let j = 0; j < this.subTrees[i].length; j++) {
-      //   this.subTrees[i][j].draw(this.ctx);
-      // }
     }
-    // console.log("e f", this.ctx.getTransform().e, this.ctx.getTransform().f);
-    // console.log("ctx.getTransform()", this.ctx.getTransform());
-    // console.log(
-    //   -this.parentNode.x +
-    //     (this.stageWidth / 2 - this.ctx.getTransform().e) /
-    //       this.ctx.getTransform().d
-    // );
-    // this.ctx.fillStyle = "#00ff00";
-    // this.ctx.beginPath();
-    // this.ctx.arc(
-    //   (this.stageWidth / 2 - this.ctx.getTransform().e) /
-    //     this.ctx.getTransform().d,
-    //   (this.stageHeight / 2 - this.ctx.getTransform().f) /
-    //     this.ctx.getTransform().d,
-    //   10,
-    //   0,
-    //   2 * Math.PI
-    // );
-    this.ctx.fill();
   }
 
   focusOnNode(e) {
@@ -312,14 +294,14 @@ class App {
         }
         for (let j = 0; j < this.numSubTree; j++) {
           if (
-            this.subTrees[i][j].checkClick(
+            this.mainTrees[i].subTrees[j].checkClick(
               mousePos,
               this.ctx,
               this.canvas.width,
               this.canvas.height
             )
           ) {
-            this.subTrees[i][j].focusOn(
+            this.mainTrees[i].subTrees[j].focusOn(
               this.ctx,
               this.canvas.width,
               this.canvas.height
