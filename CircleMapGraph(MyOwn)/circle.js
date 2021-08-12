@@ -13,9 +13,14 @@ export class Circle {
     this.cmpName = cmpName;
     this.marketCap = marketCap;
     this.isSubtreeOpened = false;
+    this.isShowing = false;
   }
   draw(ctx) {
-    this.growUp();
+    if (this.isShowing) {
+      this.growUp();
+    } else {
+      this.shrinkDown();
+    }
     // ctx.strokeStyle = "#FBE7C6";
     ctx.fillStyle = this.color;
     ctx.beginPath();
@@ -39,11 +44,19 @@ export class Circle {
     this.y = this.centerPoint.y;
   }
   growUp() {
+    if (this.radius <= 0) this.radius = 1;
     if (this.radius < this.maxRadius) {
       this.radius += this.radius * 0.15;
     }
   }
-  isGrowingUp() {
+  shrinkDown() {
+    if (this.radius > 0.1) {
+      this.radius -= this.radius * 0.15;
+    } else {
+      this.radius = 0;
+    }
+  }
+  isChanging() {
     if (this.radius < this.maxRadius) return true;
     else return false;
   }
@@ -52,8 +65,9 @@ export class Circle {
       return (x2 - x1) * (x2 - x1) + (y2 - y1) * (y2 - y1);
     }
     if (distance(clickX, clickY, this.x, this.y) < this.radius * this.radius) {
-      console.log("isClicked");
+      console.log(`${this.cmpName} isClicked`);
       this.isSubtreeOpened = !this.isSubtreeOpened;
+      console.log("this.isSubtreeOpened", this.isSubtreeOpened);
       return true;
     } else return false;
   }
@@ -76,11 +90,11 @@ export class Circle {
     // console.log("ctx.getTransform().d", ctx.getTransform().d);
 
     function moveOn(absoluteCenterX, absoluteCenterY, x, y, ctx) {
-      console.log(
-        "Math.abs(absoluteCenterX - x)",
-        Math.abs(absoluteCenterX - x)
-      );
-      console.log("(absoluteCenterX - x) / 10", (absoluteCenterX - x) / 10);
+      // console.log(
+      //   "Math.abs(absoluteCenterX - x)",
+      //   Math.abs(absoluteCenterX - x)
+      // );
+      // console.log("(absoluteCenterX - x) / 10", (absoluteCenterX - x) / 10);
       // console.log(
       //   "Math.abs(absoluteCenterY - y)",
       //   Math.abs(absoluteCenterY - y)

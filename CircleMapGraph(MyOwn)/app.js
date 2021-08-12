@@ -126,6 +126,7 @@ class App {
       "29조 4,256억원",
       this.mainTrees[i]
     );
+    this.parentNode.isShowing = true;
 
     // 화면 사이즈에 반응하도록 listener 설정
     window.addEventListener("resize", this.resize.bind(this), false);
@@ -240,14 +241,18 @@ class App {
     // canvas의 모든 객체 draw
     this.parentNode.draw(this.ctx);
     for (let i = 0; i < this.mainTrees.length; i++) {
-      if (this.parentNode.isSubtreeOpened === true) {
-        this.mainTrees[i].draw(this.ctx);
-      }
+      this.mainTrees[i].draw(this.ctx, this.parentNode.isSubtreeOpened);
       if (!this.mainTrees[i].isLineGrowingUp()) {
         for (let j = 0; j < this.mainTrees[i].subTrees.length; j++) {
-          if (this.mainTrees[i].childNode[j].isSubtreeOpened === true) {
-            this.mainTrees[i].subTrees[j].draw(this.ctx);
-          }
+          this.mainTrees[i].subTrees[j].draw(
+            this.ctx,
+            this.mainTrees[i].childNode[j].isSubtreeOpened
+          );
+          // if (this.mainTrees[i].childNode[j].isSubtreeOpened)
+          //   console.log(
+          //     "this.mainTrees[i].childNode[j].cmpName",
+          //     this.mainTrees[i].childNode[j].cmpName
+          //   );
         }
       }
     }

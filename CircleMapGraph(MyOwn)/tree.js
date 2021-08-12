@@ -41,17 +41,19 @@ export class Tree {
         // "#ff423b",
         data[i].color,
         data[i].name,
-        data[i].money,
-       );
+        data[i].money
+      );
       this.lines[i] = new Line(2, this.centerPoint, tempPosition);
     }
   }
-  draw(ctx) {
+  draw(ctx, isSubtreeOpened) {
     for (let i = 0; i < this.childNode.length; i++) {
+      this.lines[i].isShowing = isSubtreeOpened;
       this.lines[i].draw(ctx);
     }
     for (let i = 0; i < this.childNode.length; i++) {
-      if (!this.lines[i].isGrowingUp()) {
+      if (!this.lines[i].isChanging()) {
+        this.childNode[i].isShowing = isSubtreeOpened;
         this.childNode[i].draw(ctx);
       }
     }
@@ -69,19 +71,19 @@ export class Tree {
     let y = this.startPoint.y + dy * t;
     return [x, y];
   }
-  isGrowingUp() {
+  isChanging() {
     return (
-      this.childNode[this.childNode.length - 1].isGrowingUp() ||
-      this.lines[this.childNode.length - 1].isGrowingUp()
+      this.childNode[this.childNode.length - 1].isChanging() ||
+      this.lines[this.childNode.length - 1].isChanging()
     );
   }
   isLineGrowingUp() {
-    return this.lines[this.childNode.length - 1].isGrowingUp();
+    return this.lines[this.childNode.length - 1].isChanging();
   }
   checkClick(e, ctx, stageWidth, stageHeight) {
     // console.log("checkClick", e.clientX);
     for (let i = 0; i < this.childNode.length; i++) {
-      if (!this.lines[i].isGrowingUp()) {
+      if (!this.lines[i].isChanging()) {
         if (
           this.childNode[i].isClicked(
             (e.clientX - ctx.getTransform().e) / ctx.getTransform().d,

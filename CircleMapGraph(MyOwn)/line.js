@@ -6,6 +6,7 @@ export class Line {
     this.x = startPoint.x;
     this.y = startPoint.y;
     this.t = 0;
+    this.isShowing = false;
   }
   draw(ctx) {
     ctx.save();
@@ -13,11 +14,20 @@ export class Line {
     ctx.lineWidth = this.lineWidth;
     ctx.beginPath();
     ctx.strokeStyle = "#eb6aff";
-    if (this.t < 1) {
-      this.t += 0.05;
-      [this.x, this.y] = this.getLineTimeFunction(this.t);
+    if (this.isShowing) {
+      if (this.t < 1) {
+        this.t += 0.05;
+        [this.x, this.y] = this.getLineTimeFunction(this.t);
+      } else {
+        this.t = 1;
+      }
     } else {
-      this.t = 1;
+      if (this.t <= 1 && this.t >= 0) {
+        this.t -= 0.05;
+        [this.x, this.y] = this.getLineTimeFunction(this.t);
+      } else {
+        this.t = 0;
+      }
     }
     ctx.moveTo(this.startPoint.x, this.startPoint.y);
     ctx.lineTo(this.x, this.y);
@@ -37,7 +47,7 @@ export class Line {
     this.x = this.endPoint.x;
     this.y = this.endPoint.y;
   }
-  isGrowingUp() {
+  isChanging() {
     return this.t < 1;
   }
 }
